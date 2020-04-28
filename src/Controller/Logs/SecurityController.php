@@ -2,6 +2,7 @@
 
 namespace App\Controller\Logs;
 
+use App\Controller\Dictionary\LanguagesController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -30,6 +31,8 @@ class SecurityController extends AbstractController
                 $this->session->set('errorEmail', 'true');
             }
         }
+        $languages = new LanguagesController;
+        $this->session->set('languages', $languages->getLanguages());
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 

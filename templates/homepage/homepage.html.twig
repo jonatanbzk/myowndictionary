@@ -2,17 +2,32 @@
 
 {% block dropmenu %}
     <div id="dropdownMenuDiv">
-        <div class="btn-group right" id="dropdownMenuSubDiv">
-            <button type="button" class="btn btn-secondary btn-sm
+        <div class="btn-group right" id="dropdownMenuDictionary">
+            <button type="button" class="btn btn-secondary btn
+            dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" id="dropdownMenuButton">
+                Choose a dictionary
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" data-toggle="collapse"
+                   href="#formAddDict"
+                   role="button" aria-expanded="false"
+                   aria-controls="collapseExample">
+                    Create a new dictionary
+                </a>
+            </div>
+        </div>
+        <div class="btn-group right" id="dropdownMenuSettings">
+            <button type="button" class="btn btn-secondary btn
             dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false" id="dropdownMenuButton">
                 {{ app.user.username }}
             </button>
             <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="{{ path('user_update',
-                    {id: app.user.id})
-                }}">Account
-                    Settings</a>
+                    {id: app.user.id}) }}">
+                    Account Settings
+                </a>
                 <a class="dropdown-item" href="#">Download</a>
                 <a class="dropdown-item" href="{{
                 path('app_logout') }}">Logout</a>
@@ -22,6 +37,20 @@
 {% endblock %}
 {% block body %}
     <div class="container mt-4 text-center">
-
+        <div class="container collapse" id="formAddDict">
+            <div class="card card-body" id="languageFormCard">
+                {{ form_start(formTag) }}
+                    {{ form_widget(formTag) }}
+                    <button class="btnLogout btn btn-primary mt-4 mb-5" id=""
+                            type="submit">
+                        Create dictionary
+                    </button>
+                    <button class="btn btn-danger mt-4 mb-5" type="button"
+                            data-toggle="collapse" href="#formAddDict">
+                        Cancel
+                    </button>
+                    {{ form_end(formTag) }}
+            </div>
+        </div>
     </div>
 {% endblock %}

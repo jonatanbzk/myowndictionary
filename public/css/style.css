@@ -26,17 +26,17 @@ input, select, text {
     max-width: 15em;
 }
 
-#btnRegister, #btnLogout {
+.btnRegister, .btnLogout {
     background-color: #4caf51;
     border: none;
     box-shadow: none;
 }
 
-#btnRegister:hover, #btnLogout:hover{
+.btnRegister:hover, .btnLogout:hover{
     background-color: #3e8e38;
 }
 
-#btnRegister:active:focus, #btnLogout:active:focus {
+.btnRegister:active:focus, .btnLogout:active:focus {
     transform: translateY(2px)
 }
 
@@ -47,10 +47,10 @@ input, select, text {
 #dropdownMenuDiv {
     width: 100%;
     display: flex;
-    justify-content: end;
+    justify-content: space-between
 }
 
-#dropdownMenuSubDiv {
+#dropdownMenuSettings, #dropdownMenuDictionary {
     margin: 1em;
 }
 
@@ -60,3 +60,23 @@ input, select, text {
     box-shadow: none;
 }
 
+#formAddDict {
+    max-width: 540px;
+}
+
+#languagesSelect {
+    display: flex;
+    flex-direction: column;
+}
+
+#SelectLanguage_1 {
+    margin-bottom: 1em;
+}
+
+#languageFormCard span {
+    display: none;
+}
+
+.d-block {
+    display: none !important
+}

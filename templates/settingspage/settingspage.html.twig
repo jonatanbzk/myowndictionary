@@ -9,10 +9,13 @@
         {{ form_row(updateUserForm.email) }}
         {{ form_label(updateUserForm.plainPassword, 'New Password') }}
         {{ form_row(updateUserForm.plainPassword) }}
-        <button class="btn btn-primary mt-4 mb-5" id="btnLogout"
-                type="submit">
+        <button class="btnLogout btn btn-primary mt-4 mb-5" type="submit">
             Update
         </button>
+        <a class="btn btn-danger mt-4 mb-5" type="button"
+                href="{{ path('homepage') }}">
+            Cancel
+        </a>
     {{ form_end(updateUserForm) }}
 
     <form method="post" action="{{ path('user_delete', {id: app.user.id}) }}">
