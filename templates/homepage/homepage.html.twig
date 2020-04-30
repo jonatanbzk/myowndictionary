@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block dropmenu %}
-    <div id="dropdownMenuDiv">
+    <div id="dropdownMenuDiv" xmlns="http://www.w3.org/1999/html">
         <div class="btn-group right" id="dropdownMenuDictionary">
             <button type="button" class="btn btn-secondary btn
             dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -9,6 +9,10 @@
                 Choose a dictionary
             </button>
             <div class="dropdown-menu dropdown-menu-right">
+                {% for tag in tags %}
+                <a href="#">{{ tag.language1 ~ ' ' ~ tag.language2 ~ ' ' ~
+                   tag.id     }}</a><br>
+                {% endfor %}
                 <a class="dropdown-item" data-toggle="collapse"
                    href="#formAddDict"
                    role="button" aria-expanded="false"

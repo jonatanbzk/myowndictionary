@@ -71,6 +71,7 @@ class UserController extends AbstractController
     /**
      * @Route("/reset_password_form/{id}", name="reset_password_form")
      * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
      * @return Response
      */
     public function resetPasswordForm(Request $request,
@@ -114,6 +115,7 @@ class UserController extends AbstractController
      * @Route("/settings/{id}", name="user_update", methods="GET|POST")
      * @param User $user
      * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
      * @return RedirectResponse
      */
     public function update(User $user, Request $request,

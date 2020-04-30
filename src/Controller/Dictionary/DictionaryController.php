@@ -6,6 +6,7 @@ namespace App\Controller\Dictionary;
 use App\Entity\Tag;
 use App\Entity\User;
 use App\Form\Dictionary\TagType;
+use App\Repository\TagRepository;
 use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,9 +14,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LanguagesController extends AbstractController
+/**
+ * Class DictionaryController
+ * @package App\Controller\Dictionary
+ * @Route("/homepage", name="homepage_")
+ */
+class DictionaryController extends AbstractController
 {
-
     const LANGUAGES = [
         0 => 'English',
         1 => 'French',
@@ -33,15 +38,18 @@ class LanguagesController extends AbstractController
         return self::LANGUAGES;
     }
 
-    /**
-     * @Route("/homepage", name="tag")
-     * @param Request $request
-     * @return Response
-     */
-    public function createTag(Request $request)
+    private function getTags($tagRepository)
     {
-        $tag = new Tag();
         $user = $this->getUser();
+        $tags = $tagRepository->findBy(array('user' => $user));
+        return $tags;
+    }
+
+    private function addTags(Request $request)
+    {
+        $user = $this->getUser();
+
+        $tag = new Tag();
         $tag->setUser($user);
 
         $form = $this->createForm(TagType::class, $tag);
@@ -64,8 +72,21 @@ class LanguagesController extends AbstractController
         if ($form->isSubmitted() && count($form->getErrors()) !== 0) {
             $this->addFlash('danger', 'You already have a dictionary with these languages');
         }
+        return $form->createView();
+    }
+
+    /**
+     * @Route("/", name="index")
+     * @param TagRepository $tagRepository
+     * @param Request $request
+     * @return Response
+     */
+    public function index(TagRepository $tagRepository, Request $request)
+    {
             return $this->render('homepage/homepage.html.twig', [
-            'formTag' => $form->createView(),
+                'formTag' => $this->addTags($request),
+                'tags' => $this->getTags($tagRepository)
+
         ]);
     }
 

@@ -5,7 +5,7 @@ namespace App\Form\Dictionary;
 
 
 use App\Entity\Tag;
-use App\Controller\Dictionary\LanguagesController;
+use App\Controller\Dictionary\DictionaryController;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
