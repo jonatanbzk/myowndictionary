@@ -3,10 +3,12 @@
 namespace App\Controller\User;
 
 use App\Controller\Mailer;
+use App\Entity\Tag;
 use App\Entity\User;
 use App\Form\User\RegistrationFormType;
 use App\Form\User\UpdateUserFormType;
 use App\Form\User\UpdateUserPasswordFormType;
+use App\Repository\TagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +25,13 @@ class UserController extends AbstractController
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
+    }
+
+    private function getTags($tagRepository)
+    {
+        $user = $this->getUser();
+        $tags = $tagRepository->findBy(array('user' => $user));
+        return $tags;
     }
 
     /**
@@ -116,10 +125,12 @@ class UserController extends AbstractController
      * @param User $user
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param TagRepository $tagRepository
      * @return RedirectResponse
      */
     public function update(User $user, Request $request,
-                           UserPasswordEncoderInterface $passwordEncoder): Response
+                           UserPasswordEncoderInterface $passwordEncoder,
+                           TagRepository $tagRepository): Response
     {
         $form = $this->createForm(UpdateUserFormType::class, $user);
         $form->handleRequest($request);
@@ -145,7 +156,8 @@ class UserController extends AbstractController
 
         return $this->render('settingspage/settingspage.html.twig', [
             'user' => $user,
-            'updateUserForm' => $form->createView()
+            'updateUserForm' => $form->createView(),
+            'tags' => $this->getTags($tagRepository)
         ]);
     }
 
@@ -177,13 +189,40 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
 
+
+    /**
+     * @Route("/settings/deleteTag/{id}", name="tag_delete", methods="DELETE")
+     * @param Request $request
+     * @param Tag $tag
+     * @return RedirectResponse
+     */
+    public function deleteTag(Request $request, Tag $tag)
+    {
+        if ($this->isCsrfTokenValid
+        ('delete' . $tag->getId(), $request->get('_token'))) {
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($tag);
+            $entityManager->flush();
+
+            $urlTag = $request->get('id');
+            $sessionTag = $this->session->get('current_tag');
+            if (!empty($sessionTag) && $sessionTag[0] == $urlTag) {
+                $this->session->remove('current_tag');
+            }
+            $this->addFlash('success', 'Your dictionary has
+            been deleted');
+        }
+         return $this->redirectToRoute('homepage');
+    }
+
     /**
      * @Route("/settings/delete/{id}", name="user_delete", methods="DELETE")
      * @param User $user
      * @param Request $request
      * @return RedirectResponse
      */
-    public function delete(User $user, Request $request)
+    public function deleteUser(User $user, Request $request)
     {
         if ($this->isCsrfTokenValid
         ('delete' . $user->getId(), $request->get('_token'))) {

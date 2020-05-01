@@ -3,7 +3,7 @@
 {% block body %}
 <div class="container mt-4 text-center">
     <h2>Settings</h2>
-
+    {# update user #}
     {{ form_start(updateUserForm) }}
         {{ form_row(updateUserForm.username) }}
         {{ form_row(updateUserForm.email) }}
@@ -17,16 +17,42 @@
             Cancel
         </a>
     {{ form_end(updateUserForm) }}
+    {# DELETE Tag #}
+        <div class="btn-group mb-4">
+            <button type="button" class="btn btn-sm btn-outline-danger
+            dropdown-toggle id="deleteTagButton" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false" id="n">
+            Delete a dictionary
+            </button>
+            <div class="dropdown-menu">
+                {% for tag in tags %}
+                        <form id="deleteTagForm" method="post"
+                            action="{{ path('tag_delete', {id: tag.id}) }}"
+                              onsubmit="return confirm('Delete this Dictionary? ' +
+                               'This cannot be undone.')">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token"
+                               value="{{ csrf_token('delete' ~ tag.id) }}">
+                            <button class="dropdown-item" data-toggle="modal"
+                        data-target="#ModalTagDelete">
+                            {{ tag.getLangStr.0 ~ ' / ' ~ tag.langStr.1 }}
+                            </button>
+                        </form>
+                {% endfor %}
+            </div>
+        </div>
 
+    {# DELETE user #}
     <form method="post" action="{{ path('user_delete', {id: app.user.id}) }}">
         <input type="hidden" name="_method" value="DELETE">
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~
         app.user.id) }}">
         <button type="button" class="btn btn-sm btn-outline-danger"
                 data-toggle="modal"
-                data-target="#exampleModalCenter">Delete My Account</button>
+                data-target="#ModalUserDelete">Delete My Account</button>
 
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="ModalUserDelete" tabindex="-1"
+             role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -42,7 +68,6 @@
                 </div>
             </div>
         </div>
-
     </form>
 
 </div>

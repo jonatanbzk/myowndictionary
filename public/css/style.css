@@ -54,7 +54,7 @@ input, select, text {
     margin: 1em;
 }
 
-#dropdownMenuButton {
+#dropdownMenuButtonTag, #dropdownMenuButtonSettings {
     background-color: #3e8e38;
     border: none;
     box-shadow: none;
@@ -79,4 +79,13 @@ input, select, text {
 
 .d-block {
     display: none !important
+}
+
+#deleteTagButton {
+    margin: auto;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: center;
 }

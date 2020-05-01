@@ -4,7 +4,6 @@
 namespace App\Controller\Dictionary;
 
 use App\Entity\Tag;
-use App\Entity\User;
 use App\Form\Dictionary\TagType;
 use App\Repository\TagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
