@@ -22,7 +22,7 @@ class HomePageController extends AbstractController
     public function homePage(TagRepository $repository)
     {
       //  $tags = $repository->findAll();
-        return $this->render('homepage/homepage.html.twig');
+      //  return $this->render('homepage/homepage.html.twig');
      //  return new Response('test');
     }
 

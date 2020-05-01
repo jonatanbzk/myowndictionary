@@ -6,12 +6,19 @@
             <button type="button" class="btn btn-secondary btn
             dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false" id="dropdownMenuButton">
-                Choose a dictionary
+                {% if app.session.get('current_tag') %}
+                    {{ app.session.get('current_tag').1[0] ~ ' / ' ~
+                    app.session.get('current_tag').1[1] }}
+                {% else %}
+                    Choose a dictionary
+                {% endif %}
             </button>
             <div class="dropdown-menu dropdown-menu-right">
                 {% for tag in tags %}
-                <a href="#">{{ tag.language1 ~ ' ' ~ tag.language2 ~ ' ' ~
-                   tag.id     }}</a><br>
+                <a class="dropdown-item" href="{{ path('homepage_currentTag',
+                    {id:app.user.id,tag: tag.getId}) }} ">
+                    {{ tag.getLangStr.0 ~ ' / ' ~ tag.langStr.1 }}
+                </a>
                 {% endfor %}
                 <a class="dropdown-item" data-toggle="collapse"
                    href="#formAddDict"

@@ -7,8 +7,8 @@ use App\Entity\Tag;
 use App\Entity\User;
 use App\Form\Dictionary\TagType;
 use App\Repository\TagRepository;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -21,21 +21,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DictionaryController extends AbstractController
 {
-    const LANGUAGES = [
-        0 => 'English',
-        1 => 'French',
-        2 => 'German',
-        3 => 'Polish',
-        4 => 'Russian',
-        5 => 'Italian',
-        6 => 'Portuguese',
-        7 => 'Spanish',
-        8 => 'Esperanto'
-    ];
 
-    public function getLanguages()
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    public function __construct(SessionInterface $session)
     {
-        return self::LANGUAGES;
+
+        $this->session = $session;
     }
 
     private function getTags($tagRepository)
@@ -86,8 +81,21 @@ class DictionaryController extends AbstractController
             return $this->render('homepage/homepage.html.twig', [
                 'formTag' => $this->addTags($request),
                 'tags' => $this->getTags($tagRepository)
-
         ]);
     }
 
+    /**
+     * @Route("/{id}/{tag}", name="currentTag")
+     * @param Request $request
+     * @param Tag $tag
+     * @return RedirectResponse
+     */
+    public function currentTag(Request $request, Tag $tag)
+    {
+        $id = $request->attributes->get('_route_params');
+        $urlTag = (int) $id["tag"];
+        $langStr = $tag->getLangStr();
+        $this->session->set('current_tag', [$urlTag, $langStr]);
+        return $this->redirectToRoute('homepage');
+    }
 }

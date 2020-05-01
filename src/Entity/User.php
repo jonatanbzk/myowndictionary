@@ -69,6 +69,8 @@ class User implements UserInterface
      */
     private $tags;
 
+    private $currentTag;
+
     public function __construct()
     {
         $this->registration_at = new \DateTime();
@@ -223,6 +225,25 @@ class User implements UserInterface
                 $tag->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentTag(): ?int
+    {
+        return $this->currentTag;
+    }
+
+    /**
+     * @param $tag
+     * @return $this
+     */
+    public function setCurrentTag($tag): self
+    {
+        $this->currentTag = $tag;
 
         return $this;
     }

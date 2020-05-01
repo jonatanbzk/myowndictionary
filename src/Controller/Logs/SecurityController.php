@@ -31,8 +31,6 @@ class SecurityController extends AbstractController
                 $this->session->set('errorEmail', 'true');
             }
         }
-        $languages = new DictionaryController;
-        $this->session->set('languages', $languages->getLanguages());
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 

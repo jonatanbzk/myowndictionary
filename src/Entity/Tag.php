@@ -14,6 +14,18 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Tag
 {
+    const LANGUAGES = [
+        0 => 'English',
+        1 => 'French',
+        2 => 'German',
+        3 => 'Polish',
+        4 => 'Russian',
+        5 => 'Italian',
+        6 => 'Portuguese',
+        7 => 'Spanish',
+        8 => 'Esperanto'
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -78,5 +90,12 @@ class Tag
         $this->language_2 = $language_2;
 
         return $this;
+    }
+
+    public function getLangStr(): array
+    {
+         return [
+             self::LANGUAGES[$this->language_1],
+             self::LANGUAGES[$this->language_2]];
     }
 }
