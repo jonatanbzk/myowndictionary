@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -51,6 +53,16 @@ class Tag
      */
     private $language_2;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Term", mappedBy="tag", orphanRemoval=true)
+     */
+    private $terms;
+
+    public function __construct()
+    {
+        $this->terms = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,5 +109,36 @@ class Tag
          return [
              self::LANGUAGES[$this->language_1],
              self::LANGUAGES[$this->language_2]];
+    }
+
+    /**
+     * @return Collection|Term[]
+     */
+    public function getTerms(): Collection
+    {
+        return $this->terms;
+    }
+
+    public function addTerm(Term $term): self
+    {
+        if (!$this->terms->contains($term)) {
+            $this->terms[] = $term;
+            $term->setTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTerm(Term $term): self
+    {
+        if ($this->terms->contains($term)) {
+            $this->terms->removeElement($term);
+            // set the owning side to null (unless already changed)
+            if ($term->getTag() === $this) {
+                $term->setTag(null);
+            }
+        }
+
+        return $this;
     }
 }

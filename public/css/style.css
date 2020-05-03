@@ -21,6 +21,14 @@ a:hover {
     color: #0b2e13;
 }
 
+.dropdown-item:hover {
+    background-color: #f0fff2;
+}
+
+.dropdown-item:active {
+    background-color: #3e8e38;
+}
+
 input, select, text {
     margin: auto;
     max-width: 15em;
@@ -32,12 +40,23 @@ input, select, text {
     box-shadow: none;
 }
 
-.btnRegister:hover, .btnLogout:hover{
+.btnRegister:hover, .btnLogout:hover {
     background-color: #3e8e38;
 }
 
 .btnRegister:active:focus, .btnLogout:active:focus {
-    transform: translateY(2px)
+    transform: translateY(2px);
+    background-color: #3e8e38 !important;
+    box-shadow: none !important;
+}
+
+.btn-primary {
+    background-color: #3e8e38;
+    box-shadow: none !important;
+}
+
+.btn-primary:active:focus {
+
 }
 
 .form-control:focus{
