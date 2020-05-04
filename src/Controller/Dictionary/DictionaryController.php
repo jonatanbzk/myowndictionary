@@ -6,6 +6,7 @@ namespace App\Controller\Dictionary;
 use App\Entity\Tag;
 use App\Form\Dictionary\TagType;
 use App\Repository\TagRepository;
+use App\Repository\TermRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,8 +36,7 @@ class DictionaryController extends AbstractController
     private function getTags($tagRepository)
     {
         $user = $this->getUser();
-        $tags = $tagRepository->findBy(array('user' => $user));
-        return $tags;
+        return $tagRepository->findBy(array('user' => $user));
     }
 
     private function addTags(Request $request)
@@ -69,17 +69,30 @@ class DictionaryController extends AbstractController
         return $form->createView();
     }
 
+    private function getTerms($termRepository)
+    {
+        $currentTag = $this->session->get('current_tag');
+        if (!empty($currentTag)) {
+            return $termRepository->findBy(array('tag' => $currentTag[0]));
+        }
+        return;
+    }
+
     /**
      * @Route("/", name="index")
      * @param TagRepository $tagRepository
+     * @param TermRepository $termRepository
      * @param Request $request
      * @return Response
      */
-    public function index(TagRepository $tagRepository, Request $request)
+    public function index(TagRepository $tagRepository, TermRepository
+    $termRepository,
+    Request $request)
     {
             return $this->render('homepage/homepage.html.twig', [
                 'formTag' => $this->addTags($request),
-                'tags' => $this->getTags($tagRepository)
+                'tags' => $this->getTags($tagRepository),
+                'terms' => $this->getTerms($termRepository)
         ]);
     }
 
@@ -95,6 +108,6 @@ class DictionaryController extends AbstractController
         $urlTag = (int) $id["tag"];
         $langStr = $tag->getLangStr();
         $this->session->set('current_tag', [$urlTag, $langStr]);
-        return $this->redirectToRoute('homepage');
+        return $this->redirectToRoute('homepage_index');
     }
 }

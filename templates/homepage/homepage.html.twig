@@ -63,5 +63,16 @@
                     {{ form_end(formTag) }}
             </div>
         </div>
+
+        <div class="card">
+            <div class="card-body">
+                {% for term in terms %}
+                    <p class="card-text">
+                        {{ term.getId ~ ' : ' ~ term.getWord ~ '  ->  ' ~ term
+                        .getTranslation }}
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}

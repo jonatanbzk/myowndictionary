@@ -151,7 +151,7 @@ class UserController extends AbstractController
             $this->addFlash('success', 'You updated your account
              successfully.');
 
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('homepage_index');
         }
 
         return $this->render('settingspage/settingspage.html.twig', [
@@ -213,7 +213,7 @@ class UserController extends AbstractController
             $this->addFlash('success', 'Your dictionary has
             been deleted');
         }
-         return $this->redirectToRoute('homepage');
+         return $this->redirectToRoute('homepage_index');
     }
 
     /**
