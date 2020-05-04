@@ -64,15 +64,20 @@
             </div>
         </div>
 
+        {% if app.session.get('current_tag') %}
         <div class="card">
             <div class="card-body">
                 {% for term in terms %}
                     <p class="card-text">
-                        {{ term.getId ~ ' : ' ~ term.getWord ~ '  ->  ' ~ term
+                        {{ term.getWord ~ '  ->  ' ~ term
                         .getTranslation }}
                     </p>
                 {% endfor %}
             </div>
+            <div class="pagination pagination-sm justify-content-center">
+                {{ knp_pagination_render(terms) }}
+            </div>
         </div>
+        {% endif %}
     </div>
 {% endblock %}

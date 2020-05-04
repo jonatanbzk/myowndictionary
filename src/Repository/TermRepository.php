@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Term;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +18,18 @@ class TermRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Term::class);
+    }
+
+    /**
+     * @param $idTag
+     * @return Query
+     */
+    public function findByQuery($idTag): Query
+    {
+        $query = $this->createQueryBuilder('term')
+            ->where('term.tag = :idTag')
+            ->setParameter('idTag', $idTag);
+        return $query->getQuery();
     }
 
     // /**

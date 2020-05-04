@@ -108,3 +108,12 @@ input, select, text {
     display: flex;
     justify-content: center;
 }
+
+.page-item.active .page-link {
+    background-color: #3e8e38;
+    border-color: #3e8e38;
+}
+
+.page-link {
+    color: #0c5460;
+}

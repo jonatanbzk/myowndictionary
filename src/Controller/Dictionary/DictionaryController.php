@@ -7,6 +7,7 @@ use App\Entity\Tag;
 use App\Form\Dictionary\TagType;
 use App\Repository\TagRepository;
 use App\Repository\TermRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,30 +70,33 @@ class DictionaryController extends AbstractController
         return $form->createView();
     }
 
-    private function getTerms($termRepository)
+    private function getTerms($termRepository, $paginator, $request)
     {
         $currentTag = $this->session->get('current_tag');
-        if (!empty($currentTag)) {
-            return $termRepository->findBy(array('tag' => $currentTag[0]));
-        }
-        return;
+            $tagId = (int) $currentTag[0];
+            $terms = $paginator->paginate(
+                $termRepository->findByQuery($tagId),
+                $request->query->getInt('page', 1),
+                10
+            );
+            return $terms;
     }
 
     /**
      * @Route("/", name="index")
      * @param TagRepository $tagRepository
      * @param TermRepository $termRepository
+     * @param PaginatorInterface $paginator
      * @param Request $request
      * @return Response
      */
     public function index(TagRepository $tagRepository, TermRepository
-    $termRepository,
-    Request $request)
+    $termRepository, PaginatorInterface $paginator, Request $request)
     {
             return $this->render('homepage/homepage.html.twig', [
                 'formTag' => $this->addTags($request),
                 'tags' => $this->getTags($tagRepository),
-                'terms' => $this->getTerms($termRepository)
+                'terms' => $this->getTerms($termRepository, $paginator, $request)
         ]);
     }
 
