@@ -48,7 +48,7 @@
 {% endblock %}
 {% block body %}
     <div class="container mt-4 text-center">
-        <div class="container collapse" id="formAddDict">
+        <div class="container collapse mb-4" id="formAddDict">
             <div class="card card-body" id="languageFormCard">
                 {{ form_start(formTag) }}
                     {{ form_widget(formTag) }}
@@ -66,18 +66,54 @@
 
         {% if app.session.get('current_tag') %}
         <div class="card">
-            <div class="card-body">
-                {% for term in terms %}
-                    <p class="card-text">
-                        {{ term.getWord ~ '  ->  ' ~ term
-                        .getTranslation }}
-                    </p>
-                {% endfor %}
+            <div class="card-header">
+                {{ app.session.get('current_tag').1[0] }}
+                {{ app.session.get('current_tag').1[1] }}
             </div>
-            <div class="pagination pagination-sm justify-content-center">
-                {{ knp_pagination_render(terms) }}
+            <div class="card-body">
+                <table class="table table-borderless table-sm">
+                    <tbody>
+                {% for term in terms %}
+                    <tr>
+                        <td>{{ term.getWord }}</td>
+                        <td>{{ term.getTranslation }}</td>
+                        <td>
+                            <form method="post"
+                                  action="{{ path('homepage_word_delete',
+                                      {id: term.id}) }}">
+                                <input type="hidden" name="_method"
+                                       value="DELETE">
+                                <input type="hidden" name="_token"
+                                       value="{{ csrf_token('delete' ~ term.id)
+                                       }}">
+                                <button id="eraseWord" type="submit">X</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <div class="pagination pagination-sm justify-content-center">
+                    {{ knp_pagination_render(terms) }}
+                </div>
             </div>
         </div>
+            <div class="container mt-4">
+                <button class="btn btn-primary mb-2" type="button"
+                        data-toggle="collapse" data-target="#collapseFormAddWord" aria-expanded="false" aria-controls="collapseFormAddWord">
+                    Add a word
+                </button>
+            </div>
+            <div class="collapse" id="collapseFormAddWord">
+                {{ form_start(formTerm) }}
+                {{ form_widget(formTerm.word, {'attr': {'placeholder':
+                    app.session.get('current_tag').1[0] }}) }}
+                {{ form_widget(formTerm.translation, {'attr': {'placeholder':
+                    app.session.get('current_tag').1[1] }}) }}
+                {{ form_end(formTerm) }}
+            </div>
         {% endif %}
     </div>
 {% endblock %}

@@ -117,3 +117,14 @@ input, select, text {
 .page-link {
     color: #0c5460;
 }
+
+.card {
+    margin: auto;
+    max-width: 30rem;
+}
+
+#eraseWord {
+    color: #c82333;
+    border:none;
+    background: none;
+}

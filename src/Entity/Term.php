@@ -3,9 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TermRepository")
+ * @UniqueEntity(
+ *     fields={"tag", "word", "translation"},
+ * )
  */
 class Term
 {
@@ -36,6 +40,11 @@ class Term
      * @ORM\Column(type="datetime")
      */
     private $add_at;
+
+    public function __construct()
+    {
+        $this->add_at = new \DateTime();
+    }
 
     public function getId(): ?int
     {
