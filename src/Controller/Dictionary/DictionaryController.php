@@ -76,14 +76,17 @@ class DictionaryController extends AbstractController
 
     private function getTerms($termRepository, $paginator, $request)
     {
+        $currentPage = 1;
+        if (isset($_GET['page'])) {
+            $currentPage = (int)$_GET['page'];
+        }
         $currentTag = $this->session->get('current_tag');
             $tagId = (int) $currentTag[0];
-            $terms = $paginator->paginate(
-                $termRepository->findByQuery($tagId),
-                $request->query->getInt('page', 1),
-                10
-            );
-            return $terms;
+        return $paginator->paginate(
+            $termRepository->findByQuery($tagId),
+            $request->query->getInt('page', $currentPage),
+            10
+        );
     }
 
     private function addTerm($request)
@@ -95,20 +98,42 @@ class DictionaryController extends AbstractController
 
         $term = new Term();
         $term->setTag($tag);
-        $formTerm = $this->createForm(TermType::class, $term);
-        $formTerm->handleRequest($request);
+        $formTermAdd = $this->createForm(TermType::class, $term);
+        $formTermAdd->handleRequest($request);
 
-        if ($formTerm->isSubmitted() && $formTerm->isValid()) {
+        if ($formTermAdd->isSubmitted() && $formTermAdd->isValid()) {
             $term->setAddAt(new \DateTime());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($term);
             $entityManager->flush();
+            $this->addFlash('success', 'Your word has been 
+            added to you dictionary');
         }
-        if ($formTerm->isSubmitted() && count($formTerm->getErrors()) !== 0) {
+        if ($formTermAdd->isSubmitted() && count($formTermAdd->getErrors()) !==
+            0) {
         $this->addFlash('danger', 'You already have this word in
         your dictionary');
         }
-        return $formTerm->createView();
+        return $formTermAdd->createView();
+    }
+
+    /**
+     * @Route("/word_update/{id}", name="word_update",
+     *     methods="GET|POST")
+     * @param Term $term
+     * @param Request $request
+     */
+    public function editTerm(Term $term, Request $request)
+    {
+        if ($this->isCsrfTokenValid(
+            'update' . $term->getId(), $request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $term->setWord($request->get('word'));
+            $term->setTranslation($request->get('translation'));
+            $entityManager->flush();
+            $this->addFlash('success', 'Word modified');
+            return $this->redirectToRoute('homepage_index');
+        }
     }
 
     /**
@@ -117,16 +142,14 @@ class DictionaryController extends AbstractController
      * @param Term $term
      * @return RedirectResponse
      */
-    public function deleteTag(Request $request, Term $term)
+    public function deleteTerm(Request $request, Term $term)
     {
-        if ($this->isCsrfTokenValid
-        ('delete' . $term->getId(), $request->get('_token'))) {
-
+        if ($this->isCsrfTokenValid(
+            'delete' . $term->getId(), $request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($term);
             $entityManager->flush();
-
-            $this->addFlash('success', 'Your word has
+            $this->addFlash('danger', 'Your word has
             been deleted');
         }
         return $this->redirectToRoute('homepage_index');
@@ -148,7 +171,7 @@ class DictionaryController extends AbstractController
                 'tags' => $this->getTags($tagRepository),
                 'terms' => $this->getTerms($termRepository, $paginator,
                     $request),
-                'formTerm' => $this->addTerm($request)
+                'formTerm' => $this->addTerm($request),
         ]);
     }
 
@@ -160,8 +183,8 @@ class DictionaryController extends AbstractController
      */
     public function currentTag(Request $request, Tag $tag)
     {
-        $id = $request->attributes->get('_route_params');
-        $urlTag = (int) $id["tag"];
+        $urlParam = $request->attributes->get('_route_params');
+        $urlTag = (int) $urlParam["tag"];
         $langStr = $tag->getLangStr();
         $this->session->set('current_tag', [$urlTag, $langStr]);
         return $this->redirectToRoute('homepage_index');

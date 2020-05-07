@@ -128,3 +128,7 @@ input, select, text {
     border:none;
     background: none;
 }
+
+.inputUpdateTerm {
+    max-width: 8em;
+}

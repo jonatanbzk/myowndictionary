@@ -1,0 +1,15 @@
+<div class="container mt-4">
+    <button class="btn btn-primary mb-2" type="button"
+            data-toggle="collapse" data-target="#collapseFormAddWord"
+            aria-expanded="false" aria-controls="collapseFormAddWord">
+        Add a word
+    </button>
+    <div class="collapse" id="collapseFormAddWord">
+        {{ form_start(formTerm) }}
+        {{ form_widget(formTerm.word, {'attr': {'placeholder':
+            app.session.get('current_tag').1[0] }}) }}
+        {{ form_widget(formTerm.translation, {'attr': {'placeholder':
+            app.session.get('current_tag').1[1] }}) }}
+        {{ form_end(formTerm) }}
+    </div>
+</div>

@@ -18,4 +18,11 @@ class TermType extends AbstractType
             ->add('save', SubmitType::class)
         ;
     }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => Term::class,
+        ]);
+    }
 }
