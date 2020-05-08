@@ -39,7 +39,9 @@
                     {id: app.user.id}) }}">
                     Account Settings
                 </a>
-                <a class="dropdown-item" href="#">Download</a>
+                <a class="dropdown-item"
+                   href="{{ path('homepage_downloadDictionary') }}">
+                    Download this dictionary</a>
                 <a class="dropdown-item" href="{{
                 path('app_logout') }}">Logout</a>
             </div>

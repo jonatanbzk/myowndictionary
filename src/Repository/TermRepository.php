@@ -28,6 +28,7 @@ class TermRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('term')
             ->where('term.tag = :idTag')
+            ->orderBy('term.word')
             ->setParameter('idTag', $idTag);
         return $query->getQuery();
     }

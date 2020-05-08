@@ -9,6 +9,7 @@ use App\Form\User\RegistrationFormType;
 use App\Form\User\UpdateUserFormType;
 use App\Form\User\UpdateUserPasswordFormType;
 use App\Repository\TagRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,10 +22,16 @@ class UserController extends AbstractController
 {
 
     private $session;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $manager;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session,
+                                EntityManagerInterface $manager)
     {
         $this->session = $session;
+        $this->manager = $manager;
     }
 
     private function getTags($tagRepository)
@@ -32,6 +39,14 @@ class UserController extends AbstractController
         $user = $this->getUser();
         $tags = $tagRepository->findBy(array('user' => $user));
         return $tags;
+    }
+
+    private function formError($form)
+    {
+        if ($form->isSubmitted() && count($form->getErrors(true)) !== 0) {
+            $errors = $form->getErrors(true);
+            $this->addFlash('danger', $errors);
+        }
     }
 
     /**
@@ -57,9 +72,8 @@ class UserController extends AbstractController
             );
             $user->setActivationCode(md5(rand()));
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->manager->persist($user);
+            $this->manager->flush();
 
             $subject = 'Email verification';
             $view = 'emails/registration.html.twig';
@@ -71,6 +85,7 @@ class UserController extends AbstractController
             $this->addFlash('success', 'You have been 
             registered, please check your email');
         }
+        $this->formError($form);
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
@@ -106,13 +121,13 @@ class UserController extends AbstractController
                     )
                 );
             }
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->flush();
+            $this->manager->flush();
 
             $this->addFlash('success', 'You updated your 
             password successfully.');
             return $this->redirectToRoute('app_login');
         }
+        $this->formError($form);
 
         return $this->render('resetpassword/passwordnew_form.html.twig', [
             'user' => $user,
@@ -145,15 +160,14 @@ class UserController extends AbstractController
                     )
                 );
             }
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->flush();
+            $this->manager->flush();
 
             $this->addFlash('success', 'You updated your account
              successfully.');
 
             return $this->redirectToRoute('homepage_index');
         }
-
+        $this->formError($form);
         return $this->render('settingspage/settingspage.html.twig', [
             'user' => $user,
             'updateUserForm' => $form->createView(),
@@ -179,8 +193,7 @@ class UserController extends AbstractController
         if ($user != null and $user->getId() == $id and
             $user->getActivationCode() == $code) {
             $user->setEmailValid(true);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->flush();
+            $this->manager->flush();
             $this->addFlash('success', 'Your email is now validated');
 
         } else {
@@ -201,9 +214,8 @@ class UserController extends AbstractController
         if ($this->isCsrfTokenValid
         ('delete' . $tag->getId(), $request->get('_token'))) {
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($tag);
-            $entityManager->flush();
+            $this->manager->remove($tag);
+            $this->manager->flush();
 
             $urlTag = $request->get('id');
             $sessionTag = $this->session->get('current_tag');
@@ -227,9 +239,8 @@ class UserController extends AbstractController
         if ($this->isCsrfTokenValid
         ('delete' . $user->getId(), $request->get('_token'))) {
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($user);
-            $entityManager->flush();
+            $this->manager->remove($user);
+            $this->manager->flush();
 
             // necessary to redirect
             $this->get('security.token_storage')->setToken(null);

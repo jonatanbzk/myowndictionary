@@ -9,9 +9,8 @@ use App\Form\Dictionary\TagType;
 use App\Form\Dictionary\TermType;
 use App\Repository\TagRepository;
 use App\Repository\TermRepository;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,11 +30,16 @@ class DictionaryController extends AbstractController
      * @var SessionInterface
      */
     private $session;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $manager;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session,
+                                EntityManagerInterface $manager)
     {
-
         $this->session = $session;
+        $this->manager = $manager;
     }
 
     private function getTags($tagRepository)
@@ -60,9 +64,8 @@ class DictionaryController extends AbstractController
                 $this->addFlash('danger', 'Please select two 
                 different languages');
             } else {
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($tag);
-                $entityManager->flush();
+                $this->manager->persist($tag);
+                $this->manager->flush();
                 $this->addFlash('success', 'Your dictionary has 
                 been created! But don\'t let it empty. Add some terms and their 
                 translations :)');
@@ -103,13 +106,13 @@ class DictionaryController extends AbstractController
 
         if ($formTermAdd->isSubmitted() && $formTermAdd->isValid()) {
             $term->setAddAt(new \DateTime());
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($term);
-            $entityManager->flush();
+            $this->manager->persist($term);
+            $this->manager->flush();
             $this->addFlash('success', 'Your word has been 
             added to you dictionary');
         }
-        if ($formTermAdd->isSubmitted() && count($formTermAdd->getErrors()) !==
+        if ($formTermAdd->isSubmitted() && count($formTermAdd->getErrors(true))
+            !==
             0) {
         $this->addFlash('danger', 'You already have this word in
         your dictionary');
@@ -127,13 +130,14 @@ class DictionaryController extends AbstractController
     {
         if ($this->isCsrfTokenValid(
             'update' . $term->getId(), $request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $term->setWord($request->get('word'));
             $term->setTranslation($request->get('translation'));
-            $entityManager->flush();
+            $this->manager->flush();
             $this->addFlash('success', 'Word modified');
-            return $this->redirectToRoute('homepage_index');
+            $url = $this->session->get('url');
+            return $this->redirect($url);
         }
+        return;
     }
 
     /**
@@ -146,13 +150,13 @@ class DictionaryController extends AbstractController
     {
         if ($this->isCsrfTokenValid(
             'delete' . $term->getId(), $request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($term);
-            $entityManager->flush();
+            $this->manager->remove($term);
+            $this->manager->flush();
             $this->addFlash('danger', 'Your word has
             been deleted');
         }
-        return $this->redirectToRoute('homepage_index');
+            $url = $this->session->get('url');
+            return $this->redirect($url);
     }
 
     /**
@@ -166,12 +170,14 @@ class DictionaryController extends AbstractController
     public function index(TagRepository $tagRepository, TermRepository
     $termRepository, PaginatorInterface $paginator, Request $request)
     {
+        $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $this->session->set('url', $currentUrl);
             return $this->render('homepage/homepage.html.twig', [
                 'formTag' => $this->addTag($request),
                 'tags' => $this->getTags($tagRepository),
+                'formTerm' => $this->addTerm($request),
                 'terms' => $this->getTerms($termRepository, $paginator,
                     $request),
-                'formTerm' => $this->addTerm($request),
         ]);
     }
 

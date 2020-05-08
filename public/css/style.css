@@ -37,7 +37,7 @@ input, select, text {
 .btnRegister, .btnLogout {
     background-color: #4caf51;
     border: none;
-    box-shadow: none;
+    box-shadow: none !important;
 }
 
 .btnRegister:hover, .btnLogout:hover {
@@ -50,9 +50,12 @@ input, select, text {
     box-shadow: none !important;
 }
 
+.btnRegister:focus, .btnLogout:focus {
+    background-color: #3e8e38 !important;
+}
+
 .btn-primary {
-    background-color: #3e8e38;
-    box-shadow: none !important;
+
 }
 
 .btn-primary:active:focus {
@@ -123,7 +126,7 @@ input, select, text {
     max-width: 30rem;
 }
 
-#eraseWord {
+#eraseWord, #valideEditWord {
     color: #c82333;
     border:none;
     background: none;
@@ -132,3 +135,14 @@ input, select, text {
 .inputUpdateTerm {
     max-width: 8em;
 }
+
+.alert {
+    margin: auto;
+    width: 400px;
+    max-width: 75%;
+}
+
+#penIcon {
+    cursor: pointer;
+}
+

@@ -14,8 +14,11 @@ class TermType extends AbstractType
     {
         $builder
             ->add('word', null, array('label' => false))
-            ->add('translation', null, array('label' => false))
-            ->add('save', SubmitType::class)
+            ->add('translation', null, array('label' => false,
+                'attr' => ['class' => 'mt-2']))
+            ->add('save', SubmitType::class, [
+                'attr' => ['class' => 'btn btnRegister btn-primary mt-2'],
+            ])
         ;
     }
 

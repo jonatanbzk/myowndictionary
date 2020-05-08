@@ -8,29 +8,20 @@
             <tbody>
             {% for term in terms %}
                 <tr>
-                    <td>{{ term.getWord }}</td>
-                    <td>{{ term.getTranslation }}</td>
-                </tr>
-                <tr>
-                    <form method="post"
-                          action="{{ path('homepage_word_update',
-                              {id: term.id}) }}">
-                        <input type="hidden" name="_token"
-                               value="{{ csrf_token('update' ~ term.id) }}">
-                        <td>
-                            <input class="inputUpdateTerm" type="text"
-                                   value="{{ term.getWord }}" name="word">
-                        </td>
-                        <td>
-                            <input class="inputUpdateTerm" type="text"
-                                   value="{{ term.getTranslation }}"
-                               name="translation">
-                        </td>
-                        <td>
-                            <button type="submit">upd</button>
-                        </td>
-                    </form>
-                        <td>
+                    <td>{{ term.getWord |capitalize }}</td>
+                    <td>{{ term.getTranslation |capitalize }}</td>
+                    <td>
+                        <a id="penIcon" data-toggle="collapse"
+                                data-target="{{ '#editWordFormCollapse' ~
+                                term.id }}"
+                                aria-expanded="false"
+                                aria-controls="{{ 'editWordFormCollapse' ~
+                                term.id }}">
+                            <img src="{{ absolute_url(asset
+                                ('/media/pen.png'))
+                            }}" />
+                        </a>
+                    </td>
                     <td>
                         <form method="post"
                               action="{{ path('homepage_word_delete',
@@ -39,10 +30,39 @@
                                    value="DELETE">
                             <input type="hidden" name="_token"
                                    value="{{ csrf_token('delete' ~ term.id) }}">
-                            <button id="eraseWord" type="submit">X</button>
+                            <button id="eraseWord" type="submit">
+                                <img src="{{ absolute_url(asset
+                                    ('/media/trash.png'))
+                                }}" />
+                            </button>
                         </form>
                     </td>
+                </tr>
+                <tr class="collapse"
+                    id="{{ 'editWordFormCollapse' ~ term.id }}">
+                    <form method="post"
+                          action="{{ path('homepage_word_update',
+                              {id: term.id}) }}">
+                        <input type="hidden" name="_token"
+                               value="{{ csrf_token('update' ~ term.id) }}">
+                        <td>
+                            <input class="inputUpdateTerm" type="text"
+                                   value="{{ term.getWord |capitalize }}"
+                                   name="word">
                         </td>
+                        <td>
+                            <input class="inputUpdateTerm" type="text"
+                                   value="{{ term.getTranslation |capitalize }}"
+                               name="translation">
+                        </td>
+                        <td>
+                            <button type="submit" id="valideEditWord">
+                                <img src="{{ absolute_url(asset
+                                    ('/media/checkmark.png'))
+                                }}" />
+                            </button>
+                        </td>
+                    </form>
                 </tr>
             {% endfor %}
             </tbody>

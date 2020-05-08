@@ -78,7 +78,7 @@ class Email extends AbstractController
         $this->addFlash('success', 'An new verification email 
         has been send');
         $this->session->set('errorEmail', '');
-        return $this->redirectToRoute('homepage');
+        return $this->redirectToRoute('app_login');
     }
 
     /**
