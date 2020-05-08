@@ -33,22 +33,20 @@ class TermRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
 
-    // /**
-    //  * @return Term[] Returns an array of Term objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Term[] Returns an array of Term objects
+     */
+    public function findByTagId($tagId)
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('t.tag = :val')
+            ->setParameter('val', $tagId)
+            ->orderBy('t.word')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Term

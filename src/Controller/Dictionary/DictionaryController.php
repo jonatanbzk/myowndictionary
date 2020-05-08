@@ -182,6 +182,49 @@ class DictionaryController extends AbstractController
     }
 
     /**
+     * @Route("downloadDictionary", name="downloadDictionary")
+     * @param TermRepository $termRepository
+     */
+    public function downloadDictionary(TermRepository $termRepository)
+    {
+        $currentTag = $this->session->get('current_tag');
+        if (!empty($currentTag)) {
+            $lang1 = $currentTag[1][0];
+            $lang2 = $currentTag[1][1];
+            $file = $lang1 . "_" . $lang2 . "_Dictionary.txt";
+            $txt = fopen($file, "w") or die("Unable to open file!");
+            fwrite($txt, "Thanks for using MyOwnDictionary !" . PHP_EOL);
+            fwrite($txt, 'Dictionary: ' . $lang1 . ' => ' . $lang2 .
+                PHP_EOL);
+            //get dictionary data and write file
+            $tagId = (int) $currentTag[0];
+            $dictionary = $termRepository->findByTagId($tagId);
+            $this->session->set('test', $dictionary);
+            $idx = 1;
+            foreach ($dictionary as $d) {
+                fwrite($txt, $idx . ': ' . $d->getWord() . ' - ' .
+                    $d->getTranslation() . PHP_EOL);
+                $idx++;
+            }
+            fclose($txt);
+            //dl file
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' .
+                basename($file) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            flush(); // Flush system output buffer
+            readfile($file);
+            unlink($file);
+            die();
+        }
+        return $this->redirectToRoute('homepage_index');
+    }
+
+    /**
      * @Route("/{id}/{tag}", name="currentTag")
      * @param Request $request
      * @param Tag $tag

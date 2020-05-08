@@ -39,9 +39,11 @@
                     {id: app.user.id}) }}">
                     Account Settings
                 </a>
+                {% if app.session.get('current_tag') %}
                 <a class="dropdown-item"
                    href="{{ path('homepage_downloadDictionary') }}">
                     Download this dictionary</a>
+                {% endif %}
                 <a class="dropdown-item" href="{{
                 path('app_logout') }}">Logout</a>
             </div>
