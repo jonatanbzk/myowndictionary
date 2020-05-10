@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{{ dump(app.session.get('testDirection')) }}
+{{ dump(app.session.get('testLength')) }}
+{{ dump(app.session.get('testData')) }}
+{% endblock %}
+

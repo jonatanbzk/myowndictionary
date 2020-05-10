@@ -184,6 +184,7 @@ class DictionaryController extends AbstractController
     /**
      * @Route("downloadDictionary", name="downloadDictionary")
      * @param TermRepository $termRepository
+     * @return RedirectResponse
      */
     public function downloadDictionary(TermRepository $termRepository)
     {

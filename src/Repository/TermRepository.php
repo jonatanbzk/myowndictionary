@@ -47,6 +47,20 @@ class TermRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return Term[] Returns an array of Term objects
+     */
+    public function findForTest($tagId, $length)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.tag = :val')
+            ->setParameter('val', $tagId)
+            ->setMaxResults($length)
+            ->orderBy('RAND()')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 
     /*
     public function findOneBySomeField($value): ?Term

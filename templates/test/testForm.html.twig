@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h3 class="text-center">New test</h3>
+<div class="container mt-4 text-center">
+    <div class="form-group">
+        <form action="{{ path('runTest') }}">
+            <select class="custom-select mb-3 mt-4" name="testDirection" required>
+                <option class="testDirection" value="">
+                    Choose test direction
+                </option>
+                <option class="testDirection" value="1">
+                    {{ app.session.get('current_tag').1[0] }}  &#8594;
+                    {{ app.session.get('current_tag').1[1] }}
+                </option>
+                <option class="testDirection" value="2">
+                    {{ app.session.get('current_tag').1[1] }}  &#8594;
+                    {{ app.session.get('current_tag').1[0] }}
+                </option>
+                <option class="testDirection" value="3">Random</option>
+            </select><br>
+            <label for="">Test length: </label><br>
+            <input type="text" placeholder="default 10 questions"
+                   id="testFormInputTestLength" name="testLength"><br>
+            <button type="submit" class="btn btnRegister btn-primary
+            mt-4">Start</button>
+            <a class="btn btn-outline-danger mt-4" type="button"
+               href="{{ path('homepage_index') }}">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

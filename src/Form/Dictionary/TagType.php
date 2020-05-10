@@ -50,12 +50,4 @@ class TagType extends AbstractType
                 'label' => false
             ]);
     }
-    /*
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefault([
-            'data_class' => Tag::class,
-        ]);
-    }
-*/
 }

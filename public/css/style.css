@@ -54,14 +54,6 @@ input, select, text {
     background-color: #3e8e38 !important;
 }
 
-.btn-primary {
-
-}
-
-.btn-primary:active:focus {
-
-}
-
 .form-control:focus{
     box-shadow: 0 0 0 .2rem #4caf51;
 }
@@ -146,3 +138,26 @@ input, select, text {
     cursor: pointer;
 }
 
+.card-header {
+    display: flex;
+    justify-content: left;
+}
+
+.cardWordCol {
+    width: 40%;
+    margin-left: 0;
+}
+
+#testFormInputTestLength:focus {
+    border-color: lightgreen;
+    box-shadow: none;
+}
+
+#testFormInputTestLength {
+    width: 11em;
+}
+
+.custom-select:focus {
+    border-color: lightgreen;
+    box-shadow: 0 0 0 .2rem lightgreen;
+}
