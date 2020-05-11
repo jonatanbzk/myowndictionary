@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container text-center">
+    <div class="card">
+        <p>Score: {{ score ~ ' / ' ~ testLength }}</p>
+        <p>{% if scoreRate <= 0.33 %}
+                &#128532; &#128691; &#10145; &#128218;
+            {% endif %}
+            {% if scoreRate >0.33 and scoreRate <= 0.66 %}
+                &#128528; &#10145; &#128218;
+            {% endif %}
+            {% if scoreRate >0.66 and scoreRate < 1 %}
+                &#128527; &#127891; &#128079;
+            {% endif %}
+            {% if scoreRate == 1 %}
+                &#127941; &#127870; &#11088;
+            {% endif %}
+        </p>
+        <p>Correct answers: </p>
+        {% for result in testResult %}
+            {% if result.result == 1 %}
+                <p>{{ result.term1 ~ ' = ' ~ result.term2 }}</p>
+            {% endif %}
+        {% endfor %}
+        <p>Wrong answers: </p>
+        {% for result in testResult %}
+            {% if result.result == 0 %}
+                <p>{{ result.term1 ~ ' != ' ~ result.term2 ~ ' = ' ~
+                    result.term3 }}
+                </p>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

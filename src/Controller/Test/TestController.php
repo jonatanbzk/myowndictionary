@@ -6,6 +6,7 @@ namespace App\Controller\Test;
 use App\Repository\TermRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -25,7 +26,7 @@ class TestController extends AbstractController
 
     /**
      * @Route("/test", name="test")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function index()
     {
@@ -34,6 +35,9 @@ class TestController extends AbstractController
 
     /**
      * @Route("runTest", name="runTest")
+     * @param Request $request
+     * @param TermRepository $termRepository
+     * @return Response
      */
     public function runTest(Request $request, TermRepository $termRepository)
     {
@@ -44,12 +48,91 @@ class TestController extends AbstractController
         if ($testLength == null) {
             $testLength = 10;
         }
-        $testData =$termRepository->findForTest($tagId, $testLength);
 
-        $this->session->set('testDirection', $testDirection);
-        $this->session->set('testLength', $testLength);
-        $this->session->set('testData', $testData);
-        return $this->render('test/test.html.twig');
+        $testDataArray = array();
+        $testData =$termRepository->findForTest($tagId, $testLength);
+        foreach ($testData as $td) {
+            if ($testDirection == 3) {
+                $direction = random_int(1, 2);
+            } else {
+                $direction = $testDirection;
+            }
+            $testOneLine = array(
+                "words" => $td->getWord(),
+                "translations" => $td->getTranslation(),
+                "direction" => $direction
+            );
+            array_push($testDataArray, $testOneLine);
+        }
+        $this->session->set('testArray', $testDataArray);
+        return $this->render('test/test.html.twig', [
+            'testArray' => $testDataArray,
+        ]);
+    }
+
+    /**
+     * @Route("processingTest", name="processingTest")
+     * @param Request $request
+     * @return Response
+     */
+    public function processingTest(Request $request)
+    {
+        $testArray = $this->session->get('testArray');
+        $testLength = count($testArray);
+        $testUserResponse = [];
+        $score = 0;
+        $resultArray = array();
+        for ($i = 0; $i < $testLength; $i++) {
+            array_push($testUserResponse, $request->get(
+                'response' . $i) );
+            }
+        for ($i = 0; $i < $testLength; $i++) {
+            if ($testArray[$i]["direction"] == 1 &&
+            $testUserResponse[$i] == $testArray[$i]["translations"]) {
+                $score++;
+                $result = array(
+                    "result" => 1,    // 1 = good answer
+                    "term1" => $testArray[$i]["words"],  // question
+                    "term2" => $testUserResponse[$i],    // user answer
+                );
+                array_push($resultArray, $result);
+            } elseif ($testArray[$i]["direction"] == 2 &&
+                $testUserResponse[$i] == $testArray[$i]["words"]) {
+                $score++;
+                $result = array(
+                    "result" => 1,
+                    "term1" => $testArray[$i]["translations"],
+                    "term2" => $testUserResponse[$i],
+                );
+                array_push($resultArray, $result);
+            } else {         // bad user answer
+                if ($testArray[$i]["direction"] == 1) {
+                    $result = array(
+                        "result" => 0,   // 0 = bad answer
+                        "term1" => $testArray[$i]["words"],
+                        "term2" => $testUserResponse[$i],
+                        "term3" => $testArray[$i]["translations"], //good answer
+                    );
+                    array_push($resultArray, $result);
+                }
+                if ($testArray[$i]["direction"] == 2) {
+                    $result = array(
+                        "result" => 0,
+                        "term1" => $testArray[$i]["translations"],
+                        "term2" => $testUserResponse[$i],
+                        "term3" => $testArray[$i]["words"],
+                    );
+                    array_push($resultArray, $result);
+                }
+            }
+        }
+        $scoreRate = $score / $testLength;
+        return $this->render('test/testResult.html.twig', [
+            'score' => $score,
+            'scoreRate' => $scoreRate,
+            'testLength' => $testLength,
+            'testResult' => $resultArray,
+        ]);
     }
 
 }

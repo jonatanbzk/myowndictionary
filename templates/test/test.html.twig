@@ -1,8 +1,51 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{{ dump(app.session.get('testDirection')) }}
-{{ dump(app.session.get('testLength')) }}
-{{ dump(app.session.get('testData')) }}
+<div class="container text-center">
+    <div class="card">
+        <form action="{{ path('processingTest') }}">
+    {% for quest in testArray %}
+        <div id="{{ 'quest' ~ loop.index0 }}"
+                {% if loop.index != 1 %} style="display: none" {% endif %}>
+            <h4 class="mt-3 mb-3">Question {{ loop.index ~ '/' ~ loop.length }}</h4>
+            <span>
+                {% if quest["direction"] == 1 %}
+                    {{ quest["words"] | capitalize ~ ': ' }}
+                    <input class="testInput" type="text"
+                    placeholder="{{'The translation in ' ~
+                    app.session.get('current_tag').1[1] }}"
+                    name="{{ 'response' ~ loop.index0 }}"><br>
+                {% endif %}
+                {% if quest["direction"] == 2 %}
+                    {{ quest["translations"] | capitalize ~ ': ' }}
+                    <input class="testInput" type="text"
+                           placeholder="{{ 'The translation in ' ~
+                           app.session.get('current_tag').1[0] }}"
+                           name="{{ 'response' ~ loop.index0 }}"><br>
+                {% endif %}
+            </span>
+            <button type="button"
+            {% if loop.last %}
+                    style="display: none"
+            {% endif %}
+                    class="btn btn-primary btn-sm btnRegister mt-3 mb-3"
+            onclick="toggleForm('{{ 'quest' ~ loop.index0 }}',
+                    '{{ 'quest' ~ loop.index }}')">
+            Next >
+            </button>
+            <button class="btn btn-primary btn-sm btnRegister mt-3 mb-3"
+                    id="submitTest"
+                    {% if loop.last %}
+                        style="display: block"
+                    {% else %}
+                        style="display: none"
+                    {% endif %}>
+                Submit
+            </button>
+        </div>
+    {% endfor %}
+    </form>
+    </div>
+</div>
 {% endblock %}
 

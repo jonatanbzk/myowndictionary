@@ -12,9 +12,9 @@
             <tbody>
             {% for term in terms %}
                 <tr>
-                    <td class="cardWordCol">{{ term.getWord |capitalize }}</td>
+                    <td class="cardWordCol">{{ term.getWord | capitalize }}</td>
                     <td class="cardWordCol">
-                        {{ term.getTranslation |capitalize }}
+                        {{ term.getTranslation | capitalize }}
                     </td>
                     <td>
                         <a id="penIcon" data-toggle="collapse"
@@ -53,12 +53,13 @@
                                value="{{ csrf_token('update' ~ term.id) }}">
                         <td>
                             <input class="inputUpdateTerm" type="text"
-                                   value="{{ term.getWord |capitalize }}"
+                                   value="{{ term.getWord | capitalize }}"
                                    name="word">
                         </td>
                         <td>
                             <input class="inputUpdateTerm" type="text"
-                                   value="{{ term.getTranslation |capitalize }}"
+                                   value="{{ term.getTranslation | capitalize
+                                   }}"
                                name="translation">
                         </td>
                         <td>

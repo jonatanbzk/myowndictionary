@@ -148,7 +148,7 @@ input, select, text {
     margin-left: 0;
 }
 
-#testFormInputTestLength:focus {
+#testFormInputTestLength:focus, .testInput:focus{
     border-color: lightgreen;
     box-shadow: none;
 }
@@ -160,4 +160,8 @@ input, select, text {
 .custom-select:focus {
     border-color: lightgreen;
     box-shadow: 0 0 0 .2rem lightgreen;
+}
+
+#submitTest {
+    margin: auto;
 }
