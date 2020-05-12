@@ -165,3 +165,10 @@ input, select, text {
 #submitTest {
     margin: auto;
 }
+
+.resultQuest {
+    color: #005cbf;
+}
+.resultBadResp {
+    color: #c82333;
+}

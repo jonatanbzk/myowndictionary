@@ -17,21 +17,40 @@
                 &#127941; &#127870; &#11088;
             {% endif %}
         </p>
-        <p>Correct answers: </p>
-        {% for result in testResult %}
-            {% if result.result == 1 %}
-                <p>{{ result.term1 ~ ' = ' ~ result.term2 }}</p>
-            {% endif %}
-        {% endfor %}
-        <p>Wrong answers: </p>
-        {% for result in testResult %}
-            {% if result.result == 0 %}
-                <p>{{ result.term1 ~ ' != ' ~ result.term2 ~ ' = ' ~
-                    result.term3 }}
-                </p>
-            {% endif %}
-        {% endfor %}
+        <p>
+            <button class="btn btn-info" type="button"
+                    data-toggle="collapse" data-target="#collapseTestResult"
+                    aria-expanded="false" aria-controls="collapseTestResult">
+                Display the test results
+            </button>
+            <a class="btn btn-primary btnRegister" type="button"
+               href="{{ path('homepage_index') }}">
+                Close the test
+            </a>
+        </p>
+        <div class="collapse" id="collapseTestResult">
+            <p><b>Correct answers: </b></p>
+            {% for result in testResult %}
+                {% if result.result == 1 %}
+                    <p><span class="resultQuest">
+                            {{ result.term1 | capitalize  }}
+                        </span>
+                        {{ '  =  ' ~ result.term2 | capitalize }}</p>
+                {% endif %}
+           {% endfor %}
+            <p><b>Wrong answers: </b></p>
+           {% for result in testResult %}
+                {% if result.result == 0 %}
+                    <p><span class="resultQuest">{{ result.term1 | capitalize }}
+                        </span>
+                        &#x2260;<span  class="resultBadResp">
+                            {{ result.term2 | capitalize }}</span><br>
+                        Answer &rarr;
+                       <span>{{ result.term3 | capitalize }}</span>
+                    </p>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
-

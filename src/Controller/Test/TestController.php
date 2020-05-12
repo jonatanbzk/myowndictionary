@@ -87,8 +87,11 @@ class TestController extends AbstractController
                 'response' . $i) );
             }
         for ($i = 0; $i < $testLength; $i++) {
+            $rep = trim(strtolower($testUserResponse[$i]));
+            $rgx = '/^' . $rep . '$|^' . $rep . '[^a-z]|[^a-z]' . $rep .
+                '[^a-z]|[^a-z]' . $rep . '$/';
             if ($testArray[$i]["direction"] == 1 &&
-            $testUserResponse[$i] == $testArray[$i]["translations"]) {
+            preg_match($rgx, $testArray[$i]["translations"])) {
                 $score++;
                 $result = array(
                     "result" => 1,    // 1 = good answer
@@ -97,7 +100,7 @@ class TestController extends AbstractController
                 );
                 array_push($resultArray, $result);
             } elseif ($testArray[$i]["direction"] == 2 &&
-                $testUserResponse[$i] == $testArray[$i]["words"]) {
+                preg_match($rgx ,$testArray[$i]["words"])) {
                 $score++;
                 $result = array(
                     "result" => 1,
@@ -127,6 +130,7 @@ class TestController extends AbstractController
             }
         }
         $scoreRate = $score / $testLength;
+        $this->get('session')->remove('testArray');
         return $this->render('test/testResult.html.twig', [
             'score' => $score,
             'scoreRate' => $scoreRate,
