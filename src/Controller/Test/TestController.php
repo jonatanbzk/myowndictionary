@@ -90,43 +90,47 @@ class TestController extends AbstractController
             $rep = trim(strtolower($testUserResponse[$i]));
             $rgx = '/^' . $rep . '$|^' . $rep . '[^a-z]|[^a-z]' . $rep .
                 '[^a-z]|[^a-z]' . $rep . '$/';
-            if ($testArray[$i]["direction"] == 1 &&
-            preg_match($rgx, $testArray[$i]["translations"])) {
-                $score++;
-                $result = array(
-                    "result" => 1,    // 1 = good answer
-                    "term1" => $testArray[$i]["words"],  // question
-                    "term2" => $testUserResponse[$i],    // user answer
-                );
-                array_push($resultArray, $result);
-            } elseif ($testArray[$i]["direction"] == 2 &&
-                preg_match($rgx ,$testArray[$i]["words"])) {
-                $score++;
-                $result = array(
-                    "result" => 1,
-                    "term1" => $testArray[$i]["translations"],
-                    "term2" => $testUserResponse[$i],
-                );
-                array_push($resultArray, $result);
-            } else {         // bad user answer
-                if ($testArray[$i]["direction"] == 1) {
+            if (!empty($rep)) {
+                if ($testArray[$i]["direction"] == 1 &&
+                    preg_match($rgx, $testArray[$i]["translations"])) {
+                    $score++;
                     $result = array(
-                        "result" => 0,   // 0 = bad answer
-                        "term1" => $testArray[$i]["words"],
-                        "term2" => $testUserResponse[$i],
-                        "term3" => $testArray[$i]["translations"], //good answer
+                        "result" => 1,    // 1 = good answer
+                        "term1" => $testArray[$i]["words"],  // question
+                        "term2" => $testUserResponse[$i],    // user answer
                     );
                     array_push($resultArray, $result);
-                }
-                if ($testArray[$i]["direction"] == 2) {
+                } elseif ($testArray[$i]["direction"] == 2 &&
+                    preg_match($rgx, $testArray[$i]["words"])) {
+                    $score++;
                     $result = array(
-                        "result" => 0,
+                        "result" => 1,
                         "term1" => $testArray[$i]["translations"],
                         "term2" => $testUserResponse[$i],
-                        "term3" => $testArray[$i]["words"],
                     );
                     array_push($resultArray, $result);
                 }
+            }
+            // bad user answer
+            if ($testArray[$i]["direction"] == 1 &&
+                !preg_match($rgx, $testArray[$i]["translations"])) {
+                $result = array(
+                    "result" => 0,   // 0 = bad answer
+                    "term1" => $testArray[$i]["words"],
+                    "term2" => $testUserResponse[$i],
+                    "term3" => $testArray[$i]["translations"], //good answer
+                );
+                array_push($resultArray, $result);
+            }
+            if ($testArray[$i]["direction"] == 2 &&
+                !preg_match($rgx, $testArray[$i]["words"])) {
+                $result = array(
+                    "result" => 0,
+                    "term1" => $testArray[$i]["translations"],
+                    "term2" => $testUserResponse[$i],
+                    "term3" => $testArray[$i]["words"],
+                );
+                array_push($resultArray, $result);
             }
         }
         $scoreRate = $score / $testLength;

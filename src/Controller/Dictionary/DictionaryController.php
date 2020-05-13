@@ -128,8 +128,9 @@ class DictionaryController extends AbstractController
      */
     public function editTerm(Term $term, Request $request)
     {
-        if ($this->isCsrfTokenValid(
-            'update' . $term->getId(), $request->get('_token'))) {
+        $termId = (int) $term->getId();
+        if ($termId != 0 && $this->isCsrfTokenValid(
+            'update' . $termId, $request->get('_token'))) {
             $term->setWord($request->get('word'));
             $term->setTranslation($request->get('translation'));
             $this->manager->flush();
@@ -148,8 +149,9 @@ class DictionaryController extends AbstractController
      */
     public function deleteTerm(Request $request, Term $term)
     {
-        if ($this->isCsrfTokenValid(
-            'delete' . $term->getId(), $request->get('_token'))) {
+        $termId = (int) $term->getId();
+        if ($termId != 0 && $this->isCsrfTokenValid(
+            'delete' . $termId, $request->get('_token'))) {
             $this->manager->remove($term);
             $this->manager->flush();
             $this->addFlash('danger', 'Your word has

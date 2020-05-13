@@ -211,8 +211,9 @@ class UserController extends AbstractController
      */
     public function deleteTag(Request $request, Tag $tag)
     {
-        if ($this->isCsrfTokenValid
-        ('delete' . $tag->getId(), $request->get('_token'))) {
+        $tagId = (int) $tag->getId();
+        if ($tagId != 0 && $this->isCsrfTokenValid
+        ('delete' . $tagId, $request->get('_token'))) {
 
             $this->manager->remove($tag);
             $this->manager->flush();
@@ -236,8 +237,9 @@ class UserController extends AbstractController
      */
     public function deleteUser(User $user, Request $request)
     {
-        if ($this->isCsrfTokenValid
-        ('delete' . $user->getId(), $request->get('_token'))) {
+        $userId = (int) $user->getId();
+        if ($userId != 0 && $this->isCsrfTokenValid
+        ('delete' . $userId, $request->get('_token'))) {
 
             $this->manager->remove($user);
             $this->manager->flush();
