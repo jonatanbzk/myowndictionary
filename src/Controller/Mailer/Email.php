@@ -72,7 +72,7 @@ class Email extends AbstractController
         $view = 'emails/registration.html.twig';
         $name = $user->getUsername();
         $email = $user->getEmail();
-        $link = 'http://15.236.121.103:443/activCode/' . $user->getId() .
+        $link = 'https://15.236.121.103:443/activCode/' . $user->getId() .
             '/' . $user->getActivationCode();
         $this->index($subject, $name, $email, $view, $link);
         $this->addFlash('success', 'An new verification email 
