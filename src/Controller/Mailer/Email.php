@@ -72,7 +72,7 @@ class Email extends AbstractController
         $view = 'emails/registration.html.twig';
         $name = $user->getUsername();
         $email = $user->getEmail();
-        $link = 'https://15.236.121.103:443/activCode/' . $user->getId() .
+        $link = 'https://mydictionary.org/activCode/' . $user->getId() .
             '/' . $user->getActivationCode();
         $this->index($subject, $name, $email, $view, $link);
         $this->addFlash('success', 'An new verification email 
@@ -99,7 +99,7 @@ class Email extends AbstractController
                 $view = 'emails/resetPassword.html.twig';
                 $name = $user->getUsername();
                 $email = $user->getEmail();
-                $link = 'http://15.236.121.103:443/reset_password_form/' .
+                $link = 'https://mydictionary.org/reset_password_form/' .
                     $user->getId();
                 $this->index($subject, $name, $email, $view ,$link);
                 $this->addFlash('success', 'You will receive an 
