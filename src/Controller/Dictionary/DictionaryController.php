@@ -194,8 +194,14 @@ class DictionaryController extends AbstractController
         if (!empty($currentTag)) {
             $lang1 = $currentTag[1][0];
             $lang2 = $currentTag[1][1];
-            $file = $lang1 . "_" . $lang2 . "_Dictionary.txt";
-            $txt = fopen($file, "w") or die("Unable to download your Dictionary!");
+	    $file = "dictionary.txt";
+	    $path = getcwd();
+	    if(!file_exists($file)) {
+		die($path . $file);
+	    }
+	   clearstatcache();
+	   
+	    $txt = fopen($file, "w") or die("Unable to download your Dictionary!");
             fwrite($txt, "Thanks for using MyDictionary !" . PHP_EOL);
             fwrite($txt, 'Dictionary: ' . $lang1 . ' => ' . $lang2 .
                 PHP_EOL);

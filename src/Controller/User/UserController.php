@@ -79,7 +79,7 @@ class UserController extends AbstractController
             $view = 'emails/registration.html.twig';
             $name = $user->getUsername();
             $email = $user->getEmail();
-            $link = 'http://127.0.0.1:8000/activCode/' . $user->getId() .
+            $link = 'https://mydictionary.org/activCode/' . $user->getId() .
                 '/' . $user->getActivationCode();
             $sendEmail->index($subject, $name, $email, $view, $link);
             $this->addFlash('success', 'You have been 
