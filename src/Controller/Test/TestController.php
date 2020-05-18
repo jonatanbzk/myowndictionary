@@ -69,29 +69,18 @@ class TestController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("processingTest", name="processingTest")
-     * @param Request $request
-     * @return Response
-     */
-    public function processingTest(Request $request)
+    public function testScore($testLength, $testUserResponse, $testArray)
     {
-        $testArray = $this->session->get('testArray');
-        $testLength = count($testArray);
-        $testUserResponse = [];
         $score = 0;
         $resultArray = array();
-        for ($i = 0; $i < $testLength; $i++) {
-            array_push($testUserResponse, $request->get(
-                'response' . $i) );
-            }
         for ($i = 0; $i < $testLength; $i++) {
             $rep = trim(strtolower($testUserResponse[$i]));
             $rgx = '/^' . $rep . '$|^' . $rep . '[^a-z]|[^a-z]' . $rep .
                 '[^a-z]|[^a-z]' . $rep . '$/';
             if (!empty($rep)) {
                 if ($testArray[$i]["direction"] == 1 &&
-                    preg_match($rgx, $testArray[$i]["translations"])) {
+                    preg_match($rgx, strtolower
+                    ($testArray[$i]["translations"]))) {
                     $score++;
                     $result = array(
                         "result" => 1,    // 1 = good answer
@@ -100,7 +89,7 @@ class TestController extends AbstractController
                     );
                     array_push($resultArray, $result);
                 } elseif ($testArray[$i]["direction"] == 2 &&
-                    preg_match($rgx, $testArray[$i]["words"])) {
+                    preg_match($rgx, strtolower($testArray[$i]["words"]))) {
                     $score++;
                     $result = array(
                         "result" => 1,
@@ -112,7 +101,7 @@ class TestController extends AbstractController
             }
             // bad user answer
             if ($testArray[$i]["direction"] == 1 &&
-                !preg_match($rgx, $testArray[$i]["translations"])) {
+                !preg_match($rgx, strtolower($testArray[$i]["translations"]))) {
                 $result = array(
                     "result" => 0,   // 0 = bad answer
                     "term1" => $testArray[$i]["words"],
@@ -122,7 +111,7 @@ class TestController extends AbstractController
                 array_push($resultArray, $result);
             }
             if ($testArray[$i]["direction"] == 2 &&
-                !preg_match($rgx, $testArray[$i]["words"])) {
+                !preg_match($rgx, strtolower($testArray[$i]["words"]))) {
                 $result = array(
                     "result" => 0,
                     "term1" => $testArray[$i]["translations"],
@@ -132,13 +121,34 @@ class TestController extends AbstractController
                 array_push($resultArray, $result);
             }
         }
-        $scoreRate = $score / $testLength;
+        return [$score, $resultArray];
+    }
+
+    /**
+     * @Route("processingTest", name="processingTest")
+     * @param Request $request
+     * @return Response
+     */
+    public function processingTest(Request $request)
+    {
+        $testArray = $this->session->get('testArray');
+        $testLength = count($testArray);
+        $testUserResponse = [];
+
+        for ($i = 0; $i < $testLength; $i++) {
+            array_push($testUserResponse, $request->get(
+                'response' . $i) );
+            }
+
+        $result = $this->testScore($testLength, $testUserResponse, $testArray);
+
+        $scoreRate = $result[0] / $testLength;
         $this->get('session')->remove('testArray');
         return $this->render('test/testResult.html.twig', [
-            'score' => $score,
+            'score' => $result[0],
             'scoreRate' => $scoreRate,
             'testLength' => $testLength,
-            'testResult' => $resultArray,
+            'testResult' => $result[1],
         ]);
     }
 
