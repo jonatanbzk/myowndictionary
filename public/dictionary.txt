@@ -1,3 +1,66 @@
 Thanks for using MyDictionary !
-Dictionary: Polish => French
-1: Honor - Honneur
+Dictionary: English => French
+1: ache - douleur
+2: almost - presque
+3: amount - quantité
+4: asset - atout
+5: bold - audacieux
+6: bound - lié
+7: bucket - seau
+8: ceiling - plafond
+9: chin - menton
+10: cliff - falaise
+11: core - coeur
+12: crappy - merdique
+13: crate - caisse
+14: currently - actuellement
+15: dish - plat
+16: eager - désireux
+17: empowerment - responsabilisation, émancipation, pouvoir
+18: feast - festin
+19: fee - frais
+20: flourish - fleurir
+21: foe - ennemi
+22: folk - gens
+23: forehead - front
+24: foresight - prévoyance
+25: former - ancien, premier
+26: genuinely - vraiment
+27: hardship - épreuve
+28: hassle - tracas
+29: hence - par conséquent
+30: hoax - canular
+31: involve - impliquer
+32: label - étiquette
+33: lack - pénurie, manque
+34: loans - prêts
+35: maiden name - nom de jeune fille
+36: meadow - prairie
+37: mist - brume
+38: mood - humeur
+39: mundane - banal
+40: nail - ongle
+41: naughty - vilain
+42: needlessly - inutilement
+43: nimble - agile
+44: offspring - progéniture
+45: pitfall - piège
+46: rate - taux
+47: reliance - dépendance
+48: rough - rugueux
+49: rusty - rouillé
+50: shareolder - actionnaire
+51: shortage - pénurie
+52: silk - soie
+53: snoring - ronflement
+54: spit - cracher
+55: swallow - avaler
+56: thrive - prospérer
+57: trick - duper
+58: undergo - subir
+59: utter - total, fini
+60: velvet - velours
+61: vessel - navire
+62: vow - voeu, serment
+63: wart - verrue
+64: wary - prudent
