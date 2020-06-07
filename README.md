@@ -1,7 +1,7 @@
 # myowndictionary_v2 (Symfony5)
 MyOwnDictionary is an open source project. The goal was to give language learners a tool to create a list of unknown terms and test their lexicographic knowledge.
 You are first encouraged to pick two languages for your glossary. Then you add terms and their translations. Using this glossary, you will be able to check your list or test yourself.
-You can test it here: www.mydictionary.org
+<br /> You can test it here: www.mydictionary.org
 ### Contributing
 1. Fork it
 2. Create your feature branch (git checkout -b my-new-feature)
