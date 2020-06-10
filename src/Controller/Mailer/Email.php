@@ -100,7 +100,7 @@ class Email extends AbstractController
                 $name = $user->getUsername();
                 $email = $user->getEmail();
                 $link = 'https://mydictionary.org/reset_password_form/' .
-                    $user->getId();
+                    $user->getId() . '/' . $user->getActivationCode();
                 $this->index($subject, $name, $email, $view ,$link);
                 $this->addFlash('success', 'You will receive an 
                 email with instructions about how to reset your password');

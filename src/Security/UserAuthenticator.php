@@ -84,7 +84,6 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
 
         if ($user->getEmailValid() == false) {
             // fail authentication, email not valid
-            echo ('test');
             throw new CustomUserMessageAuthenticationException(
                 'Please confirm your email address ! Confirmation email
                  not received ?');

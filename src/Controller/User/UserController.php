@@ -93,7 +93,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/reset_password_form/{id}", name="reset_password_form")
+     * @Route("/reset_password_form/{id}/{code}", name="reset_password_form")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return Response
@@ -106,12 +106,17 @@ class UserController extends AbstractController
 
         $routeParameters = $request->attributes->get('_route_params');
         $id = $routeParameters['id'];
-
+        $code = $routeParameters['code'];
         $repository = $this->getDoctrine()->getRepository(
             User::class);
         $user = $repository->find($id);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($user->getActivationCode() !== $code) {
+            $this->addFlash('danger', 'An error occurred, 
+            please try again to update your password');
+            return $this->redirectToRoute('app_login');
+        }
+        if ($form->isSubmitted() && $form->isValid() &&
+            $user->getActivationCode() === $code) {
             if (!empty($form->get('plainPassword')->getData())) {
                 // encode the plain password
                 $user->setPassword(
@@ -197,7 +202,7 @@ class UserController extends AbstractController
             $this->addFlash('success', 'Your email is now validated');
 
         } else {
-            $this->addFlash('danger', 'You don\'t have any account');;
+            $this->addFlash('danger', 'You don\'t have any account');
         }
         return $this->redirectToRoute('app_login');
     }
